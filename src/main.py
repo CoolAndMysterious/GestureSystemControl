@@ -6,10 +6,6 @@ import keyboard
 import mediapipe as mp
 
 
-# =========================================================
-# SETTINGS
-# =========================================================
-
 CAMERA_INDEX = 0
 
 PINCH_THRESHOLD = 0.045
@@ -18,22 +14,11 @@ VOLUME_COOLDOWN = 0.20
 MEDIA_COOLDOWN = 1.00
 
 
-# =========================================================
-# MEDIAPIPE
-# =========================================================
-
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 
 
-# =========================================================
-# HELPERS
-# =========================================================
-
 def calculate_distance(point1, point2) -> float:
-    """
-    Calculate distance between two landmarks.
-    """
 
     return math.hypot(
         point1.x - point2.x,
@@ -42,9 +27,6 @@ def calculate_distance(point1, point2) -> float:
 
 
 def is_pinching(thumb_tip, finger_tip) -> bool:
-    """
-    Check if thumb and finger are touching.
-    """
 
     distance = calculate_distance(
         thumb_tip,
@@ -54,9 +36,6 @@ def is_pinching(thumb_tip, finger_tip) -> bool:
     return distance < PINCH_THRESHOLD
 
 
-# =========================================================
-# ACTIONS
-# =========================================================
 
 def volume_up():
     keyboard.send("volume up")
@@ -78,9 +57,7 @@ def mute():
     keyboard.send("volume mute")
 
 
-# =========================================================
-# MAIN
-# =========================================================
+
 
 def main():
 
@@ -109,7 +86,6 @@ def main():
             if not success:
                 break
 
-            # Mirror webcam
             frame = cv2.flip(frame, 1)
 
             rgb_frame = cv2.cvtColor(
@@ -159,9 +135,7 @@ def main():
                         mp_hands.HAND_CONNECTIONS
                     )
 
-                    # =================================================
-                    # INDEX FINGER -> VOLUME
-                    # =================================================
+                  
 
                     if is_pinching(thumb_tip, index_tip):
 
@@ -175,9 +149,7 @@ def main():
 
                             last_volume_time = current_time
 
-                    # =================================================
-                    # MIDDLE FINGER -> VIDEO SEEK
-                    # =================================================
+                    
 
                     if is_pinching(thumb_tip, middle_tip):
 
@@ -191,9 +163,7 @@ def main():
 
                             last_media_time = current_time
 
-                    # =================================================
-                    # PINKY -> MUTE
-                    # =================================================
+                   
 
                     if is_pinching(thumb_tip, pinky_tip):
 
@@ -203,9 +173,7 @@ def main():
 
                             last_mute_time = current_time
 
-                    # =================================================
-                    # DEBUG TEXT
-                    # =================================================
+                  
 
                     cv2.putText(
                         frame,
@@ -220,9 +188,7 @@ def main():
                         2
                     )
 
-            # =========================================================
-            # UI TEXT
-            # =========================================================
+          
 
             controls = [
                 "Right Index Pinch = Volume Up",
